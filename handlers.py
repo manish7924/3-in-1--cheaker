@@ -137,6 +137,36 @@ def register_handlers(bot):
 
         emails_to_check = list(set(emails_list))[:100]
         execute_bulk_check(m, emails_to_check, domain)
+        
+    def process_bulk_document(m, domain):
+        if not utils.is_subscribed(bot, m.from_user.id):
+            utils.force_join_warning(bot, m.chat.id)
+            return
+        if utils.is_private() and m.from_user.id != config.OWNER_ID:
+            utils.private_warning(bot, m.chat.id)
+            return
+            
+        if m.text and m.text.lower() in ['cancel', 'cancle']:
+            bot.reply_to(m, "Cancelled.", reply_markup=ReplyKeyboardRemove())
+            return
+            
+        if not m.document or not str(m.document.file_name).lower().endswith('.txt'):
+            bot.reply_to(m, "Send only a .txt file.", reply_markup=ReplyKeyboardRemove())
+            return
+
+        bot.reply_to(m, "Downloading file...", reply_markup=ReplyKeyboardRemove())
+        file = bot.download_file(bot.get_file(m.document.file_id).file_path)
+        all_lines = [l.strip().lower() for l in file.decode('utf-8', errors='ignore').splitlines() if l.strip()]
+        
+        emails_list = []
+        for line in all_lines:
+            if "@" in line:
+                emails_list.append(line)
+            elif domain != "fakemail" and re.fullmatch(r'[\w\.-]+', line):
+                emails_list.append(line + f'@{domain}.com')
+
+        emails_to_check = list(set(emails_list))[:100]
+        execute_bulk_check(m, emails_to_check, domain)
 
     # --- TELEGRAM HANDLERS ---
     @bot.callback_query_handler(func=lambda call: call.data == "check_joined")
@@ -282,7 +312,9 @@ def register_handlers(bot):
             utils.force_join_warning(bot, call.message.chat.id)
             return
         if utils.is_private() and call.from_user.id != config.OWNER_ID: return
-        parts = call.data.split("_")
+        
+        # Split correctly from the right to avoid breaking on "bulk_message"
+        parts = call.data.rsplit("_", 1)
         mode = parts[0]
         domain = parts[1]
 
@@ -298,29 +330,9 @@ def register_handlers(bot):
         elif mode == "bulk":
             bot.delete_message(call.message.chat.id, call.message.message_id)
             bot.send_message(call.message.chat.id, "Send your .txt file with emails/usernames (one per line)", reply_markup=cancel_markup)
+            bot.register_next_step_handler(call.message, lambda m: process_bulk_document(m, domain))
 
         elif mode == "bulk_message":
             bot.delete_message(call.message.chat.id, call.message.message_id)
             bot.send_message(call.message.chat.id, "Send emails/usernames separated by newlines", reply_markup=cancel_markup)
             bot.register_next_step_handler(call.message, lambda m: process_bulk_message(m, domain))
-
-    @bot.message_handler(content_types=['document'])
-    def bulk_check(m):
-        if not utils.is_subscribed(bot, m.from_user.id):
-            utils.force_join_warning(bot, m.chat.id)
-            return
-        if utils.is_private() and m.from_user.id != config.OWNER_ID:
-            utils.private_warning(bot, m.chat.id)
-            return
-        if not str(m.document.file_name).lower().endswith('.txt'):
-            bot.reply_to(m, "Send only .txt file", reply_markup=ReplyKeyboardRemove())
-            return
-
-        bot.reply_to(m, "Downloading file...", reply_markup=ReplyKeyboardRemove())
-        file = bot.download_file(bot.get_file(m.document.file_id).file_path)
-        all_lines = [l.strip().lower() for l in file.decode('utf-8', errors='ignore').splitlines() if l.strip()]
-        
-        emails_list = [line for line in all_lines if "@" in line or re.fullmatch(r'[\w\.-]+', line)]
-        emails_to_check = list(set(emails_list))[:100]
-        execute_bulk_check(m, emails_to_check, "gmail") # Assuming default domain is gmail for documents
-
