@@ -277,10 +277,17 @@ def register_handlers(bot):
 
     @bot.callback_query_handler(func=lambda call: call.data == "back_to_domains")
     def back_to_domains_handler(call):
+        # ⏳ 60-Second Expiration Check
+        if int(time.time()) - call.message.date > 60:
+            bot.answer_callback_query(call.id, "This Command is expired", show_alert=True)
+            bot.edit_message_text("⏳ <b>This Command is expired.</b>\nPlease use /check again.", call.message.chat.id, call.message.message_id, parse_mode="HTML")
+            return
+
         if not utils.is_subscribed(bot, call.from_user.id):
             utils.force_join_warning(bot, call.message.chat.id)
             return
         if utils.is_private() and call.from_user.id != config.OWNER_ID: return
+        
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
             InlineKeyboardButton("📧 Gmail", callback_data="domain_gmail"),
@@ -291,10 +298,17 @@ def register_handlers(bot):
 
     @bot.callback_query_handler(func=lambda call: call.data.startswith("domain_"))
     def domain_selected(call):
+        # ⏳ 60-Second Expiration Check
+        if int(time.time()) - call.message.date > 60:
+            bot.answer_callback_query(call.id, "This Command is expired", show_alert=True)
+            bot.edit_message_text("⏳ <b>This Command is expired.</b>\nPlease use /check again.", call.message.chat.id, call.message.message_id, parse_mode="HTML")
+            return
+
         if not utils.is_subscribed(bot, call.from_user.id):
             utils.force_join_warning(bot, call.message.chat.id)
             return
         if utils.is_private() and call.from_user.id != config.OWNER_ID: return
+        
         domain = call.data.split("_")[1]
         
         markup = InlineKeyboardMarkup(row_width=1)
@@ -308,6 +322,12 @@ def register_handlers(bot):
 
     @bot.callback_query_handler(func=lambda call: call.data.startswith(("single_", "bulk_", "bulk_message_")))
     def mode_selected(call):
+        # ⏳ 60-Second Expiration Check
+        if int(time.time()) - call.message.date > 60:
+            bot.answer_callback_query(call.id, "This Command is expired", show_alert=True)
+            bot.edit_message_text("⏳ <b>This Command is expired.</b>\nPlease use /check again.", call.message.chat.id, call.message.message_id, parse_mode="HTML")
+            return
+
         if not utils.is_subscribed(bot, call.from_user.id):
             utils.force_join_warning(bot, call.message.chat.id)
             return
