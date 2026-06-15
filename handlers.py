@@ -235,8 +235,8 @@ def register_handlers(bot):
             return
         markup = InlineKeyboardMarkup()
         markup.add(
-            InlineKeyboardButton("Public It", callback_data="set_public"),
-            InlineKeyboardButton("Private It", callback_data="set_private")
+            InlineKeyboardButton("🟢 Public It", callback_data="set_public"),
+            InlineKeyboardButton("🔴 Private It", callback_data="set_private")
         )
         bot.send_message(m.chat.id, f"Current: {utils.get_status().upper()}\nSelect mode:", reply_markup=markup)
 
@@ -269,9 +269,9 @@ def register_handlers(bot):
             return
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
-            InlineKeyboardButton("📧 Gmail", callback_data="domain_gmail"),
-            InlineKeyboardButton("📨 AOL", callback_data="domain_aol"),
-            InlineKeyboardButton("🎭 FakeMail", callback_data="domain_fakemail")
+            InlineKeyboardButton("🔴 📧 Gmail", callback_data="domain_gmail"),
+            InlineKeyboardButton("🔵 📨 AOL", callback_data="domain_aol"),
+            InlineKeyboardButton("🟢 🎭 FakeMail", callback_data="domain_fakemail")
         )
         bot.send_message(m.chat.id, "<b>⚙️ Select Domain Checker:</b>", parse_mode="HTML", reply_markup=markup)
 
@@ -290,9 +290,9 @@ def register_handlers(bot):
         
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
-            InlineKeyboardButton("📧 Gmail", callback_data="domain_gmail"),
-            InlineKeyboardButton("📨 AOL", callback_data="domain_aol"),
-            InlineKeyboardButton("🎭 FakeMail", callback_data="domain_fakemail")
+            InlineKeyboardButton("🔴 📧 Gmail", callback_data="domain_gmail"),
+            InlineKeyboardButton("🔵 📨 AOL", callback_data="domain_aol"),
+            InlineKeyboardButton("🟢 🎭 FakeMail", callback_data="domain_fakemail")
         )
         bot.edit_message_text("<b>⚙️ Select Domain Checker:</b>", call.message.chat.id, call.message.message_id, parse_mode="HTML", reply_markup=markup)
 
@@ -313,10 +313,10 @@ def register_handlers(bot):
         
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
-            InlineKeyboardButton("👤 Single Check", callback_data=f"single_{domain}"),
-            InlineKeyboardButton("📁 Bulk Check (File)", callback_data=f"bulk_{domain}"),
-            InlineKeyboardButton("📝 Bulk Check (Message)", callback_data=f"bulk_message_{domain}"),
-            InlineKeyboardButton("🔙 Back", callback_data="back_to_domains")
+            InlineKeyboardButton("🔵 👤 Single Check", callback_data=f"single_{domain}"),
+            InlineKeyboardButton("🟢 📁 Bulk Check (File)", callback_data=f"bulk_{domain}"),
+            InlineKeyboardButton("🔴 📝 Bulk Check (Message)", callback_data=f"bulk_message_{domain}"),
+            InlineKeyboardButton("🟡 🔙 Back", callback_data="back_to_domains")
         )
         bot.edit_message_text(f"<b>🌐 {domain.upper()} Checker</b>\n\nChoose your checking mode:", call.message.chat.id, call.message.message_id, parse_mode="HTML", reply_markup=markup)
 
