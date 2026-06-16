@@ -55,7 +55,7 @@ def register_handlers(bot):
             pass
 
         markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton("𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗢𝘄𝗻𝗲𝗿", url=f"tg://openmessage?user_id={config.OWNER_ID}"))
+        markup.add(InlineKeyboardButton("𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗢𝘄𝗻𝗲𝗿", url=f"tg://openmessage?user_id={config.OWNER_ID}", style="primary"))
 
         if available:
             txt = "\n".join(available)
@@ -100,7 +100,7 @@ def register_handlers(bot):
 
         sent = bot.reply_to(m, f"🔍 Checking <code>{email}</code>...", parse_mode="HTML")
         markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton("𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗢𝘄𝗻𝗲𝗿", url=f"tg://openmessage?user_id={config.OWNER_ID}"))
+        markup.add(InlineKeyboardButton("𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗢𝘄𝗻𝗲𝗿", url=f"tg://openmessage?user_id={config.OWNER_ID}", style="primary"))
         
         if domain == "gmail":
             TL, gaps = checkers.get_valid_tokens()
@@ -173,7 +173,7 @@ def register_handlers(bot):
     def check_joined_callback(call):
         if utils.is_subscribed(bot, call.from_user.id):
             markup = InlineKeyboardMarkup()
-            markup.add(InlineKeyboardButton("Contact Owner", url=f"tg://openmessage?user_id={config.OWNER_ID}"))
+            markup.add(InlineKeyboardButton("Contact Owner", url=f"tg://openmessage?user_id={config.OWNER_ID}", style="primary"))
             bot.edit_message_text(
                 f"Hello {call.from_user.first_name}!\nThank you for joining our channel.\n\nUse /help to see commands.",
                 call.message.chat.id,
@@ -235,8 +235,8 @@ def register_handlers(bot):
             return
         markup = InlineKeyboardMarkup()
         markup.add(
-            InlineKeyboardButton("Public It", callback_data="set_public"),
-            InlineKeyboardButton("Private It", callback_data="set_private")
+            InlineKeyboardButton("Public It", callback_data="set_public", style="success"),
+            InlineKeyboardButton("Private It", callback_data="set_private", style="danger")
         )
         bot.send_message(m.chat.id, f"Current: {utils.get_status().upper()}\nSelect mode:", reply_markup=markup)
 
@@ -269,9 +269,9 @@ def register_handlers(bot):
             return
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
-            InlineKeyboardButton("📧 Gmail", callback_data="domain_gmail"),
-            InlineKeyboardButton("📨 AOL", callback_data="domain_aol"),
-            InlineKeyboardButton("🎭 FakeMail", callback_data="domain_fakemail")
+            InlineKeyboardButton("📧 Gmail", callback_data="domain_gmail", style="primary"),
+            InlineKeyboardButton("📨 AOL", callback_data="domain_aol", style="primary"),
+            InlineKeyboardButton("🎭 FakeMail", callback_data="domain_fakemail", style="success")
         )
         bot.send_message(m.chat.id, "<b>⚙️ Select Domain Checker:</b>", parse_mode="HTML", reply_markup=markup)
 
@@ -290,9 +290,9 @@ def register_handlers(bot):
         
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
-            InlineKeyboardButton("📧 Gmail", callback_data="domain_gmail"),
-            InlineKeyboardButton("📨 AOL", callback_data="domain_aol"),
-            InlineKeyboardButton("🎭 FakeMail", callback_data="domain_fakemail")
+            InlineKeyboardButton("📧 Gmail", callback_data="domain_gmail", style="primary"),
+            InlineKeyboardButton("📨 AOL", callback_data="domain_aol", style="primary"),
+            InlineKeyboardButton("🎭 FakeMail", callback_data="domain_fakemail", style="success")
         )
         bot.edit_message_text("<b>⚙️ Select Domain Checker:</b>", call.message.chat.id, call.message.message_id, parse_mode="HTML", reply_markup=markup)
 
@@ -313,10 +313,10 @@ def register_handlers(bot):
         
         markup = InlineKeyboardMarkup(row_width=1)
         markup.add(
-            InlineKeyboardButton("👤 Single Check", callback_data=f"single_{domain}"),
-            InlineKeyboardButton("📁 Bulk Check (File)", callback_data=f"bulk_{domain}"),
-            InlineKeyboardButton("📝 Bulk Check (Message)", callback_data=f"bulk_message_{domain}"),
-            InlineKeyboardButton("🔙 Back", callback_data="back_to_domains")
+            InlineKeyboardButton("👤 Single Check", callback_data=f"single_{domain}", style="primary"),
+            InlineKeyboardButton("📁 Bulk Check (File)", callback_data=f"bulk_{domain}", style="primary"),
+            InlineKeyboardButton("📝 Bulk Check (Message)", callback_data=f"bulk_message_{domain}", style="primary"),
+            InlineKeyboardButton("🔙 Back", callback_data="back_to_domains", style="danger")
         )
         bot.edit_message_text(f"<b>🌐 {domain.upper()} Checker</b>\n\nChoose your checking mode:", call.message.chat.id, call.message.message_id, parse_mode="HTML", reply_markup=markup)
 
