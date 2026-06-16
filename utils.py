@@ -37,13 +37,13 @@ def is_subscribed(bot, user_id):
 def force_join_warning(bot, chat_id):
     markup = InlineKeyboardMarkup(row_width=1)
     markup.add(
-        InlineKeyboardButton("Join Channel", url=config.CHANNEL_LINK),
-        InlineKeyboardButton("Joined ✅", callback_data="check_joined")
+        InlineKeyboardButton("Join Channel", url=config.CHANNEL_LINK, style="primary"),
+        InlineKeyboardButton("Joined ✅", callback_data="check_joined", style="success")
     )
     bot.send_message(chat_id, "You must join our channel to use this bot!", reply_markup=markup)
 
 def private_warning(bot, chat_id):
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton("Join Our Channel", url="https://t.me/+dP_iEnSkfj8yNjA1"))
-    markup.add(InlineKeyboardButton("Contact ALEX (Admin)", url=f"tg://openmessage?user_id={config.OWNER_ID}"))
+    markup.add(InlineKeyboardButton("Join Our Channel", url="https://t.me/+dP_iEnSkfj8yNjA1", style="primary"))
+    markup.add(InlineKeyboardButton("Contact ALEX (Admin)", url=f"tg://openmessage?user_id={config.OWNER_ID}", style="primary"))
     bot.send_message(chat_id, "Bot is under Maintenance\n\nPlease Contact Owner or Try again later", reply_markup=markup)
