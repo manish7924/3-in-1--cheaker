@@ -191,13 +191,27 @@ def register_handlers(bot):
         if utils.is_private() and m.from_user.id != config.OWNER_ID:
             utils.private_warning(bot, m.chat.id)
             return
+            
         name = m.from_user.first_name
         checkers.get_valid_tokens() # Warm up tokens
-        bot.send_message(m.chat.id,
-            f"Hello {name}!\n\n"
-            "Welcome to Checker Bot\n"
-            "Made by ALEX <> [Here]\n\n"
-            "Use /help to see commands")
+        
+        # New styled welcome message
+        welcome_msg = (
+            f"✅ 𝗪𝗲𝗹𝗰𝗼𝗺𝗲, {name}! \n\n"
+            "𝗜 𝗮𝗺 𝘆𝗼𝘂𝗿 𝗵𝗶𝗴𝗵-𝗽𝗲𝗿𝗳𝗼𝗿𝗺𝗮𝗻𝗰𝗲 𝘁𝗼𝗼𝗹 𝗳𝗼𝗿 𝗳𝗮𝘀𝘁 𝗮𝗻𝗱 𝗮𝗰𝗰𝘂𝗿𝗮𝘁𝗲 𝗱𝗮𝘁𝗮 𝘃𝗮𝗹𝗶𝗱𝗮𝘁𝗶𝗼𝗻. \n\n"
+            "—————\n"
+            "🔰 𝗠𝗮𝗶𝗻 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀 : \n"
+            "✦ /check — 𝗦𝘁𝗮𝗿𝘁 𝗮 𝗻𝗲𝘄 𝘃𝗮𝗹𝗶𝗱𝗮𝘁𝗶𝗼𝗻\n"
+            "✦ /help — 𝗧𝗼 𝗢𝗽𝗲𝗻 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀 𝗟𝗶𝘀𝘁\n"
+            "—————\n"
+            "💡 𝗡𝗲𝗲𝗱 𝘀𝘂𝗽𝗽𝗼𝗿𝘁? 𝗥𝗲𝗮𝗰𝗵 𝗼𝘂𝘁 𝘁𝗼 𝗔𝗟𝗘𝗫."
+        )
+        
+        # Create the inline button linking to Admin
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton("#𝗔𝗹𝗲𝘅", url=f"tg://openmessage?user_id={config.OWNER_ID}", style="primary"))
+        
+        bot.send_message(m.chat.id, welcome_msg, reply_markup=markup)
 
     @bot.message_handler(commands=['help'])
     def help_cmd(m):
